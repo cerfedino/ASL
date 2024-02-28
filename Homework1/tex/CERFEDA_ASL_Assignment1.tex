@@ -1,0 +1,86 @@
+\documentclass[tikz,14pt,fleqn]{article}
+
+\input{headers.sty}
+
+
+\usepackage[utf8]{inputenc}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% VARIABLES
+\newcommand\namesurname{Albert Cerfeda (20-980-272)}
+\newcommand\assignment{Assignment 1}
+
+\newcommand\subject{Advanced Systems Lab}
+\newcommand\documentdate{28.02.2024}
+
+% Title content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\rhead{\assignment}
+\lhead{\namesurname}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\rfoot{Page \thepage}
+
+
+\begin{document}
+
+\begin{titlepage}
+   \begin{center}
+       \vspace*{0.2cm}
+
+       \textbf{\Large{\subject}}
+
+       \vspace{0.5cm}
+        \textbf{\assignment}\\[5mm]
+        
+            
+       \vspace{0.4cm}
+
+        \namesurname
+        \begin{figure}[H]
+            \centering
+        \end{figure}
+       \tableofcontents
+
+       \vspace*{\fill}
+     
+        \includegraphics[width=0.3\textwidth]{fig/eth_logo_kurz_pos.eps}
+       
+        \documentdate \\
+        Eidgenössische Technische Hochschule Zürich\\
+        D-INFK Department\\
+        Switzerland\\
+
+   \end{center}
+\end{titlepage}
+
+\renewcommand{\thesubsubsection}{\alph{subsubsection})}
+\setcounter{section}{1}
+\setcounter{subsection}{1}
+
+% \subsection{Task 1}
+
+
+% \subsection{Task 2}
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/2a.png}
+
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/2b.png}
+
+
+% \subsection{Task 3}
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/3a.png}
+
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/3b.png}
+
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/3c.png}
+
+% \subsubsection{}
+% \includegraphics[width=0.9\linewidth]{fig/3d.png}
+
+\end{document}
