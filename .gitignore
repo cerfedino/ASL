@@ -1,3 +1,6 @@
+# C
+*.o
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
