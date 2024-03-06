@@ -101,6 +101,7 @@ if name == "ex2c":
     plt.text(1500, 1.5, "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
     plt.text(1800, 3, "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
     plt.text(2000, 6.5, "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
+    plt.text(2000, 8, f"Best: {max(y3):.2f}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
     # Save plot as pdf
     plt.savefig(f"out/ex2c.pdf")
     if show_plt:
@@ -158,7 +159,7 @@ elif name == "ex4":
             z2.append(deviation)
     # Plot graph x,y NO ERROBAR
     color1 = "#BF4E30"
-    color2 = "#FF916A"
+    color2 = "#4E937A"
     plt.figure(figsize=(20, 6), facecolor="white")
     line1, = plt.plot(x1, y1, '^-', color=color1)
     line2, = plt.plot(x2, y2, 'o-', color=color2)
@@ -169,16 +170,19 @@ elif name == "ex4":
     # Mapping each xtick label to something different
     plt.gca().set_xticklabels([f"$2^{{{int(i)}}}$" for i in np.arange(min(x1), max(x1)+1, 1)])
     plt.gca().yaxis.grid(True, which='major', color='w', linestyle='-', linewidth=1.5)
-    plt.xlabel("Lenght of input vectors", fontsize=18, rotation=0, labelpad=10)
+    plt.xlabel("Input parameter $n$", fontsize=18, rotation=0, labelpad=10)
     plt.ylabel("flops/cycles", fontsize=15, rotation=0, labelpad=20, ha='right')
     # plt.xscale("log")
     # Labeling the lines at custom positions
-    plt.text(x1[-3], y1[-2], "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
-    plt.text(x2[-2], y2[-1], "ii) All major optimizations", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
+    plt.text(23, 2, "Unoptimized function", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
+    plt.text(28, 3, "ILP optimized function", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
+    plt.text(28, 7, f"Best: {max(y2):.2f}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
     # Save plot as pdf
     plt.savefig(f"out/ex4.pdf")
+    
     if show_plt:
         plt.show()
+
 
 
 

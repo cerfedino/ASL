@@ -106,7 +106,7 @@ The x86 floating point operations are included in the standard x86 instruction s
 
 
 \subsubsection*{g)}
-For the following exercises the \exthref{https://dougallj.github.io/applecpu/firestorm.html}{Dougall Johnson's documentation} about the Firestorm architecture has been used. The article mentions that Firestorm has a pipeline width of 8 instructions per cycle, and each of the SIMD units can execute floating-point or SIMD instructions. So the maximum would be 4 floating-point operations per cycle.
+For the following exercises the \exthref{https://dougallj.github.io/applecpu/firestorm.html}{Dougall Johnson's documentation} about the Firestorm architecture has been used. The article mentions that Firestorm has a pipeline width of 8 instructions per cycle, and 4 SIMD ports each of which can execute both floating-point and SIMD instructions. So the maximum would be 4 floating-point operations per cycle.
 \subsubsection*{h)}
 The article does not seem to make a difference between single and double precision, so the latency for addition is 3 and throughput is is 4, for both single-precision and double precision.
 \subsubsection*{i)}
@@ -117,11 +117,12 @@ The latency for FP division is 10 and throughput is 1.
 
 
 \subsection{(20 pts) LU Factorization}
-\begin{figure}[h!]
-    \inputminted[fontsize=\scriptsize, linenos, bgcolor=CODEBG, firstline=57, lastline=70]{C}{../ex2/lu.c}
-    \caption{\texttt{compute} function inside \texttt{lu.c}}
-\end{figure}
 \subsubsection{} % a)
+% \begin{figure}[h!]
+%     \vspace*{-0.5cm}
+%     \inputminted[fontsize=\scriptsize, linenos, bgcolor=CODEBG, firstline=57, lastline=70]{C}{../ex2/lu.c}
+%     \caption{\texttt{compute} function inside \texttt{lu.c}}
+% \end{figure}
 
 \subsubsection{} % b)
 The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplications and $n^3$ FP subtractions. \textbf{Note:} Subtractions are reported since they are typically implemented using additions, due to 2s complement arithmetic.
@@ -152,10 +153,21 @@ The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplicati
 \subsection{(25 pts) Basic optimization}
 \subsubsection{} % a)
 \begin{figure}[h!]
+    \begin{subfigure}{1\linewidth}
+        \inputminted[fontsize=\scriptsize, bgcolor=CODEBG, firstline=62, lastline=68]{C}{../ex4/lu4.c}
+    \end{subfigure}\\
+    \begin{subfigure}{1\linewidth}
+        \inputminted[fontsize=\scriptsize, bgcolor=CODEBG, firstline=62, lastline=82]{C}{../ex4/lu4_optimized.c}
+    \end{subfigure}
+    \caption{Unoptimized and optimized \texttt{comp} functions}
+    \label{fig:4.comp_functions}
+\end{figure}
+\begin{figure}
     \vspace*{-0.7cm}
     % Include a PDF using the graphicx package
     \includegraphics[width=\linewidth]{../out/ex4.pdf}
-    \caption{flops/cycle performance of the \texttt{compute} function compiled with different optimization flags}
+    \caption{flops/cycle performance of the \texttt{comp} functions}
+    \label{fig:4.comp_functions_plot}
 \end{figure}
 \subsubsection{} % b)
 % TODO: Is it just enough to look at the plot and see what the flops/cycles are to state an upper bound ?
@@ -163,8 +175,11 @@ The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplicati
 
 % \end{figure}
 \subsubsection{} % d)
+\autoref{fig:4.comp_functions} shows a comparison between the unoptimzied \texttt{comp} function and its optimized counterpart. In order to improve ILP I perfomed 3x loop unrolling and introduced accumulators for reducing memory accesses to the array \texttt{z}. Initially I went for 4x loop unrolling, but the performance got worse so I decided to stick with 3x loop unrolling.
 
-\subsubsection{} % e)
+When running the optimized function on code expert, we obtain a $2.73$ speedup, but as you can see from the plot in \autoref{fig:4.comp_functions_plot}, when compiling and benchmarking on my Macbook M1 machine, there isn't any performance improvement over the unoptimized version. This is likely due to the \texttt{Apple Clang} compiler and that M1 is a different architecture to the one used to run the benchmarks on Code Expert.
+
+% \subsubsection{} % e)
 
 
 \subsection{(10 pts) ILP analysis}

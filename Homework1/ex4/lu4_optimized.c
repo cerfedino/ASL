@@ -60,11 +60,25 @@ void fill_vector(double * x, int n) {
 
 
 void compute(double *x, double *y, double *z, int n) {
-    for (int i = 0; i < n; i++) {
-        for (int k = 0; k < 2; k++) {
-            z[k] += x[i + 1 - k] * y[i + k];
-        }
+    double z0 = z[0];
+    double z1 = z[1];
+    int i;
+    for (i = 0; i < n; i+=3) {
+        int next = i+1;
+        int nnext = i+2;
+        int nnnext = i+3; 
+        z0 += (x[next] * y[i]) + (x[nnext] * y[next]) 
+            + (x[nnnext] * y[nnext]);
+        z1 += (x[i] * y[next]) + (x[next] * y[nnext]) 
+            + (x[nnext] * y[nnnext]);
     }
+    for (; i < n; i++) {
+        int next = i+1;
+        z0 += x[next] * y[i];
+        z1 += x[i] * y[next];
+    }
+    z[0] = z0;
+    z[1] = z1;
 }
 
 /*
