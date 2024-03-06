@@ -23,17 +23,17 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "ex2c_b1") == 0 || strcmp(argv[1], "ex2c_b2") == 0 ||
         strcmp(argv[1], "ex2c_b3") == 0) {
-        const int REPEAT = 10;
+        const int REPEAT = 5;
         FILE *file = fopen(argv[2], "w");
-        for (int n = 100; n <= 2000; n += 100) {
-        // for (int n = 100; n <= 200; n += 100) {
+        // for (int n = 100; n <= 2000; n += 100) {
+        for (int n = 100; n <= 200; n += 100) {
             args[1] = intToString(n);
             fprintf(file, "%d ", n);
             for (int i = 1; i <= REPEAT; i++) {
-                double cycles = run(2, args);
-                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, cycles);
+                double seconds = run(2, args);
+                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, seconds);
                 fflush(stdout);
-                fprintf(file, "%.20f ", cycles);   
+                fprintf(file, "%.20f ", seconds);   
             }
             printf("\n");
             fprintf(file, "\n");
@@ -42,17 +42,18 @@ int main(int argc, char *argv[]) {
         fclose(file);
     } else if (strcmp(argv[1], "ex4a_b1") == 0 ||
                strcmp(argv[1], "ex4c_b1") == 0) {
-        const int REPEAT = 30;
+        const int REPEAT = 1;
         FILE *file = fopen(argv[2], "w");
         int n = 1 << 3;
-        for (int ii = 4; ii <= 28; ii += 1) {
+        // for (int ii = 4; ii <= 28; ii += 1) {
+        for (int ii = 4; ii <= 5; ii += 1) {
             n = n << 1;
             args[1] = intToString(n);
             fprintf(file, "%d ", n);
             for (int i = 1; i <= REPEAT; i++) {
-                double cycles = run(2, args);
-                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, cycles);
-                fprintf(file, "%.20f ", cycles);
+                double seconds = run(2, args);
+                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, seconds);
+                fprintf(file, "%.20f ", seconds);
                 fflush(stdout);
                 fflush(file);
             }

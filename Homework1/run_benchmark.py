@@ -98,9 +98,9 @@ if name == "ex2c":
     plt.xlabel("Size $n$ of the square matrix", fontsize=18, rotation=0, labelpad=10)
     plt.ylabel("flops/cycles", fontsize=18, rotation=0, labelpad=18, ha='right')
     # Labeling the lines at custom positions
-    plt.text(400, 1.5, "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
-    plt.text(500, 3, "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
-    plt.text(550, 6.5, "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
+    plt.text(1500, 1.5, "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
+    plt.text(1800, 3, "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
+    plt.text(2000, 6.5, "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
     # Save plot as pdf
     plt.savefig(f"out/ex2c.pdf")
     if show_plt:
@@ -128,7 +128,6 @@ elif name == "ex4":
             tokens = tokens[1:]
             # Calculate median and deviation of the rest of the tokens
             # Map tokens to float
-            # TODO: WHat to do about divisions by zero ? Some measurement stake too little time and get rounded to 0
             tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
             tokens.sort()
             median = tokens[(len(tokens) // 2)]
