@@ -75,7 +75,7 @@ double rdtsc(double *x, double *y, double *z, int n) {
     int i, num_runs;
     myInt64 cycles = 0;
     myInt64 start;
-    double *z2 = (double *)malloc(n*sizeof(double));
+    double *z2 = (double *)malloc(2*sizeof(double));
 
     num_runs = NUM_RUNS;
     /*
@@ -87,7 +87,7 @@ double rdtsc(double *x, double *y, double *z, int n) {
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
         for (i = 0; i < num_runs; ++i) {
-            memcpy(z2, z, sizeof(double) * n);
+            memcpy(z2, z, sizeof(double) * 2);
             start = start_tsc();
             compute(x,y,z2,n);
             cycles += stop_tsc(start);
@@ -101,7 +101,7 @@ double rdtsc(double *x, double *y, double *z, int n) {
 
     cycles = 0;
     for (i = 0; i < num_runs; ++i) {
-        memcpy(z2, z, sizeof(double) * n);
+        memcpy(z2, z, sizeof(double) * 2);
         start = start_tsc();
         compute(x,y,z2,n);
         cycles += stop_tsc(start);
@@ -117,7 +117,7 @@ double c_clock(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles = 0;
     clock_t start, end;
-    double *z2 = (double *)malloc(n*sizeof(double));
+    double *z2 = (double *)malloc(2*sizeof(double));
 
     if (z2 == NULL) {
         printf("Memory allocation failed\n");
@@ -128,7 +128,7 @@ double c_clock(double *x, double *y, double *z, int n) {
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
         for (i = 0; i < num_runs; ++i) {
-            memcpy(z2, z, sizeof(double) * n);
+            memcpy(z2, z, sizeof(double) * 2);
             start = clock();
             compute(x,y,z2,n);
             end = clock();
@@ -143,7 +143,7 @@ double c_clock(double *x, double *y, double *z, int n) {
 #endif
     cycles = 0;
     for(i=0; i<num_runs; ++i) {
-        memcpy(z2, z, sizeof(double) * n);
+        memcpy(z2, z, sizeof(double) * 2);
         start = clock();
         compute(x,y,z2,n);
         end = clock();
@@ -158,13 +158,13 @@ double timeofday(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles = 0;
     struct timeval start, end;
-    double *z2 = (double *)malloc(n*sizeof(double));
+    double *z2 = (double *)malloc(2*sizeof(double));
 
     num_runs = NUM_RUNS;
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
         for (i = 0; i < num_runs; ++i) {
-            memcpy(z2, z, sizeof(double) * n);
+            memcpy(z2, z, sizeof(double) * 2);
             gettimeofday(&start, NULL);
             compute(x,y,z2,n);
             gettimeofday(&end, NULL);
@@ -179,7 +179,7 @@ double timeofday(double *x, double *y, double *z, int n) {
 
     double seconds = 0;
     for(i=0; i < num_runs; ++i) {
-        memcpy(z2, z, sizeof(double) * n);
+        memcpy(z2, z, sizeof(double) * 2);
         gettimeofday(&start, NULL);
         compute(x,y,z2,n);
         gettimeofday(&end, NULL);
@@ -194,14 +194,14 @@ double timeofday(double *x, double *y, double *z, int n) {
 double gettickcount(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles, start, end;
-    double *z2 = (double *)malloc(n*sizeof(double));
+    double *z2 = (double *)malloc(2*sizeof(double));
 
     num_runs = NUM_RUNS;
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
 
         for (i = 0; i < num_runs; ++i) {
-            memcpy(z2, z, sizeof(double) * n);
+            memcpy(z2, z, sizeof(double) * 2);
             start = (double)GetTickCount();
             compute(x,y,z2,n);
             end = (double)GetTickCount();
@@ -218,7 +218,7 @@ double gettickcount(double *x, double *y, double *z, int n) {
 
     cycles = 0;
     for(i=0; i < num_runs; ++i) {
-        memcpy(z2, z, sizeof(double) * n);
+        memcpy(z2, z, sizeof(double) * 2);
         start = (double)GetTickCount();
         compute(x,y,z2,n);
         end = (double)GetTickCount();
@@ -233,13 +233,13 @@ double queryperfcounter(double *x, double *y, double *z, int n, LARGE_INTEGER f)
     int i, num_runs;
     double cycles = 0;
     LARGE_INTEGER start, end;
-    double *z2 = (double *)malloc(n*sizeof(double));
+    double *z2 = (double *)malloc(2*sizeof(double));
 
     num_runs = NUM_RUNS;
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
         for (i = 0; i < num_runs; ++i) {
-            memcpy(z2, z, sizeof(double) * n);
+            memcpy(z2, z, sizeof(double) * 2);
             QueryPerformanceCounter(&start);
             compute(x,y,z2,n);
             QueryPerformanceCounter(&end);
@@ -255,7 +255,7 @@ double queryperfcounter(double *x, double *y, double *z, int n, LARGE_INTEGER f)
 
     cycles = 0;
     for(i=0; i < num_runs; ++i) {
-		memcpy(z2, z, sizeof(double) * n);
+		memcpy(z2, z, sizeof(double) * 2);
         QueryPerformanceCounter(&start);
         compute(x,y,z2,n);
         QueryPerformanceCounter(&end);
@@ -278,18 +278,18 @@ double run(int argc, char **argv) {
     int n = atoi(argv[1]);
     printf("n=%d \n",n);
 
-    double* x = (double *)malloc(n*sizeof(double));
-    double* y = (double *)malloc(n*sizeof(double));
-    double* z = (double *)malloc(n*sizeof(double));
+    double* x = (double *)malloc((n+1)*sizeof(double));
+    double* y = (double *)malloc((n+1)*sizeof(double));
+    double* z = (double *)malloc(2*sizeof(double));
 
     if (x == NULL || y == NULL || z == NULL) {
         printf("Memory allocation failed\n");
         exit(1);
     }
 
-    fill_vector(x, n);
-    fill_vector(y, n);
-    fill_vector(z, n);
+    fill_vector(x, n+1);
+    fill_vector(y, n+1);
+    fill_vector(z, 2);
 
 #ifdef __x86_64__
     double r = rdtsc(x,y,z,n);
