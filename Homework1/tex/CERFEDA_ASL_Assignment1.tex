@@ -125,7 +125,7 @@ The latency for FP division is 10 and throughput is 1.
 % \end{figure}
 
 \subsubsection{} % b)
-The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplications and $n^3$ FP subtractions. \textbf{Note:} Subtractions are reported since they are typically implemented using additions, due to 2s complement arithmetic.
+The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplications and $n^3$ FP subtractions, for a total of $n^2 + 2n^3$ floating point operations. \textbf{Note:} Subtractions are reported since they are typically implemented using additions, due to 2s complement arithmetic.
 % TODO: Subtractions count as additions due to 2s complement arithmetic ?
 \subsubsection{} % c)
 % Make a PGF plot that imports data points from a file
@@ -138,7 +138,11 @@ The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplicati
 
 
 \subsubsection{} % d)
-
+\begin{enumerate}
+    \item No optimizations: The code is neither optimized nor vectorized. The performance is the worst and flat across the line.
+    \item Optimized, but no vectorization: The compiler performs some optimizations resulting in a performance improvement, but no vectorization is performed.
+    \item All major optimizations: The compiler both performs optimizations and vectories the code, resulting in the best performance. We also notice how for the matrix sizes we tested, the performance does not seem to vary greatly. The peak performance recorded is around \input{../out/ex2c_best.txt} flops/cycles.
+\end{enumerate}
 
 \subsection{(25 pts) Performance analysis and bounds}
 \subsubsection{} % a)
@@ -175,9 +179,9 @@ The \texttt{compute} function performs $n^2$ FP divisions, $n^3$ FP multiplicati
 
 % \end{figure}
 \subsubsection{} % d)
-\autoref{fig:4.comp_functions} shows a comparison between the unoptimzied \texttt{comp} function and its optimized counterpart. In order to improve ILP I perfomed 3x loop unrolling and introduced accumulators for reducing memory accesses to the array \texttt{z}. Initially I went for 4x loop unrolling, but the performance got worse so I decided to stick with 3x loop unrolling.
+\autoref{fig:4.comp_functions} shows a comparison between the unoptimzied \texttt{comp} function and its optimized counterpart. In order to improve ILP I perfomed 3x loop unrolling and introduced accumulators for reducing memory accesses to the array \texttt{z}. Initially I implemented 4x loop unrolling, but the performance overhead became noticeable so I resorted to a lower 3x loop unrolling.
 
-When running the optimized function on code expert, we obtain a $2.73$ speedup, but as you can see from the plot in \autoref{fig:4.comp_functions_plot}, when compiling and benchmarking on my Macbook M1 machine, there isn't any performance improvement over the unoptimized version. This is likely due to the \texttt{Apple Clang} compiler and that M1 is a different architecture to the one used to run the benchmarks on Code Expert.
+When running the optimized function on Code Expert, we obtain a $2.73$ speedup, but as you can see from the plot in \autoref{fig:4.comp_functions_plot}, when compiling and benchmarking on my Macbook M1 machine, there isn't any performance improvement over the unoptimized version. This is due to the \texttt{Apple Clang} compiler and that M1 is a different architecture to the one used to run the benchmarks on Code Expert. The best performance recorded on my machine is around \input{../out/ex4_best.txt} flops/cycles.
 
 % \subsubsection{} % e)
 

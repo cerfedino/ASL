@@ -83,6 +83,7 @@ if name == "ex2c":
             x3.append(n)
             y3.append(median)
             z3.append(deviation)
+    bestY = f"{max(y3):.2f}"
     # Plot graph x,y NO ERROBAR
     color1 = "#BF4E30"
     color2 = "#FF916A"
@@ -101,7 +102,10 @@ if name == "ex2c":
     plt.text(1500, 1.5, "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
     plt.text(1800, 3, "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
     plt.text(2000, 6.5, "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
-    plt.text(2000, 8, f"Best: {max(y3):.2f}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
+    plt.text(2000, 8, f"Best: {bestY}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
+    with open(f"out/ex2c_best.txt", "w") as file:
+        file.write(f"{bestY}")
+
     # Save plot as pdf
     plt.savefig(f"out/ex2c.pdf")
     if show_plt:
@@ -157,6 +161,7 @@ elif name == "ex4":
             x2.append(np.log2(n))
             y2.append(median)
             z2.append(deviation)
+    bestY = f"{max(y2):.2f}"
     # Plot graph x,y NO ERROBAR
     color1 = "#BF4E30"
     color2 = "#4E937A"
@@ -176,10 +181,11 @@ elif name == "ex4":
     # Labeling the lines at custom positions
     plt.text(23, 2, "Unoptimized function", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
     plt.text(28, 3, "ILP optimized function", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
-    plt.text(28, 7, f"Best: {max(y2):.2f}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
+    plt.text(28, 7, f"Best: {bestY}", fontsize=25, va='center', ha='right', color="black", fontweight='bold')
+    with open(f"out/ex4_best.txt", "w") as file:
+        file.write(f"{bestY}")
     # Save plot as pdf
     plt.savefig(f"out/ex4.pdf")
-    
     if show_plt:
         plt.show()
 
