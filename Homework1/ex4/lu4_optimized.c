@@ -119,6 +119,11 @@ double c_clock(double *x, double *y, double *z, int n) {
     clock_t start, end;
     double *z2 = (double *)malloc(n*sizeof(double));
 
+    if (z2 == NULL) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+
     num_runs = NUM_RUNS;
 #ifdef CALIBRATE
     while(num_runs < (1 << 14)) {
@@ -277,6 +282,11 @@ double run(int argc, char **argv) {
     double* y = (double *)malloc(n*sizeof(double));
     double* z = (double *)malloc(n*sizeof(double));
 
+    if (x == NULL || y == NULL || z == NULL) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+
     fill_vector(x, n);
     fill_vector(y, n);
     fill_vector(z, n);
@@ -286,12 +296,13 @@ double run(int argc, char **argv) {
     printf("RDTSC instruction:\n %lf cycles measured => %lf seconds, assuming frequency is %lf MHz. (change in source file if different)\n\n", r, r/(FREQUENCY), (FREQUENCY)/1e6);
 #endif
 
-    double c = c_clock(z,y,z,n);
+    double c = c_clock(x,y,z,n);
+
     printf("C clock() function:\n %lf cycles measured. On some systems, this number seems to be actually computed "
            "from a timer in seconds then transformed into clock ticks using the variable CLOCKS_PER_SEC. Unfortunately, "
            "it appears that CLOCKS_PER_SEC is sometimes set improperly. (According to this variable, your computer should "
            "be running at %lf MHz). In any case, dividing by this value should give a correct timing: %lf seconds. \n\n",c, (double) CLOCKS_PER_SEC/1e6, c/CLOCKS_PER_SEC);
-
+    
 
 #ifndef WIN32
     double t = timeofday(x,y,z,n);
@@ -305,7 +316,7 @@ double run(int argc, char **argv) {
 
     double p = queryperfcounter(x,y,z,n, f);
     printf("Windows QueryPerformanceCounter() function:\n %lf cycles measured => %lf seconds, with reported CPU frequency %lf MHz\n\n",p,p/f.QuadPart,(double)f.QuadPart/1000);
-#endif
+#endif    
 
     free(x);
     free(y);
