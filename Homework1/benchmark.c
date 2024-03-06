@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "ex2c_b1") == 0 || strcmp(argv[1], "ex2c_b2") == 0 ||
         strcmp(argv[1], "ex2c_b3") == 0) {
-        const int REPEAT = 5;
+        const int REPEAT = 10;
         FILE *file = fopen(argv[2], "w");
         for (int n = 100; n <= 2000; n += 100) {
         // for (int n = 100; n <= 200; n += 100) {
@@ -31,9 +31,9 @@ int main(int argc, char *argv[]) {
             fprintf(file, "%d ", n);
             for (int i = 1; i <= REPEAT; i++) {
                 double cycles = run(2, args);
-                printf("\r[%d/%d] n = %d, cycles = %f", i, REPEAT, n, cycles);
+                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, cycles);
                 fflush(stdout);
-                fprintf(file, "%f ", cycles);
+                fprintf(file, "%.20f ", cycles);   
             }
             printf("\n");
             fprintf(file, "\n");
@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
             fprintf(file, "%d ", n);
             for (int i = 1; i <= REPEAT; i++) {
                 double cycles = run(2, args);
-                printf("\r[%d/%d] n = %d, cycles = %f", i, REPEAT, n, cycles);
-                fprintf(file, "%f ", cycles);
+                printf("\r[%d/%d] n = %d, seconds = %.20f", i, REPEAT, n, cycles);
+                fprintf(file, "%.20f ", cycles);
                 fflush(stdout);
                 fflush(file);
             }

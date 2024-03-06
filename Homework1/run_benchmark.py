@@ -10,14 +10,18 @@ if len(sys.argv) < 2:
     print("Usage: python run_benchmark.py <plot name / exercise >")
     exit(1)
 
+show_plt = "--no-show" not in sys.argv[2:]
 
 
 # get benchmark name
 name = sys.argv[1]
 
+CPU_FREQ = 2.53*(10**9)
+MAX_FLOPS = 8
+
 if name == "ex2c":
-    def flops(n):
-        return n
+    def get_flops(n):
+        return (2*(n**3)) + (n**2)
     # Open txt file and read line by line
     x1 = []
     y1 = []
@@ -29,8 +33,6 @@ if name == "ex2c":
     y3 = []
     z3 = []
     with open(f"out/ex2c_b1.txt", "r") as file:
-        def get_flops(n):
-            return n
         for line in file:
             # Run benchmark
             tokens = line.split()
@@ -38,9 +40,7 @@ if name == "ex2c":
             flops = get_flops(n)
             
             tokens = tokens[1:]
-            # Calculate median and deviation of the rest of the tokens
-            # Map tokens to float
-            tokens = list(map(lambda token: flops/float(token), tokens))
+            tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
             tokens.sort()
             median = tokens[(len(tokens) // 2)]
             deviation = 0
@@ -57,9 +57,7 @@ if name == "ex2c":
             flops = get_flops(n)
             
             tokens = tokens[1:]
-            # Calculate median and deviation of the rest of the tokens
-            # Map tokens to float
-            tokens = list(map(lambda token: flops/float(token), tokens))
+            tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
             tokens.sort()
             median = tokens[(len(tokens) // 2)]
             deviation = 0
@@ -76,9 +74,7 @@ if name == "ex2c":
             flops = get_flops(n)
             
             tokens = tokens[1:]
-            # Calculate median and deviation of the rest of the tokens
-            # Map tokens to float
-            tokens = list(map(lambda token: flops/float(token), tokens))
+            tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
             tokens.sort()
             median = tokens[(len(tokens) // 2)]
             deviation = 0
@@ -91,23 +87,99 @@ if name == "ex2c":
     color1 = "#BF4E30"
     color2 = "#FF916A"
     color3 = "#4E937A"
-    plt.figure(figsize=(20, 6), facecolor="white") # Making the plot wider
+    plt.figure(figsize=(15, 6), facecolor="white") # Making the plot wider
     line1, = plt.plot(x1, y1, '^-', color=color1)  # Added data point dots
     line2, = plt.plot(x2, y2, 'o-', color=color2)  # Added data point dots
     line3, = plt.plot(x3, y3, 's-', color=color3)  # Added data point dots
     plt.gca().set_facecolor("#E4E4E4")
-    plt.gca().set_yticks(np.arange(min(y1+y2+y3), max(y1+y2+y3), (max(y1+y2+y3)-min(y1+y2+y3))/10), minor=False)
+    plt.gca().set_yticks(np.arange(0, MAX_FLOPS+1, 1), minor=False)
     plt.gca().set_xticks(np.arange(min(x1), max(x1)+100, 100), minor=False)
     plt.gca().yaxis.grid(True, which='major', color='w', linestyle='-', linewidth=1.5)
-    plt.xlabel("Size n of the square matrix", fontsize=18, rotation=0, labelpad=10)
-    plt.ylabel("flops/cycles", fontsize=15, rotation=0, labelpad=20, ha='right')
+    plt.xlabel("Size $n$ of the square matrix", fontsize=18, rotation=0, labelpad=10)
+    plt.ylabel("flops/cycles", fontsize=18, rotation=0, labelpad=18, ha='right')
     # Labeling the lines at custom positions
-    plt.text(x1[-3], y1[-2], "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
-    plt.text(x2[-2], y2[-1], "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
-    plt.text(x3[-1], y3[9], "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
+    plt.text(400, 1.5, "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
+    plt.text(500, 3, "ii) -O3, no vectorization", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
+    plt.text(550, 6.5, "iii) All major optimizations", fontsize=12, va='top', ha='right', color=color3, fontweight='bold')
     # Save plot as pdf
     plt.savefig(f"out/ex2c.pdf")
-    plt.show()
+    if show_plt:
+        plt.show()
+
+elif name == "ex4":
+    def get_flops_1(n):
+        return n*2*2
+    def get_flops_2(n):
+        return n*2*2
+    # Open txt file and read line by line
+    x1 = []
+    y1 = []
+    z1 = []
+    x2 = []
+    y2 = []
+    z2 = []
+    with open(f"out/ex4a_b1.txt", "r") as file:
+        for line in file:
+            # Run benchmark
+            tokens = line.split()
+            n = int(tokens[0])
+            flops = get_flops_1(n)
+            
+            tokens = tokens[1:]
+            # Calculate median and deviation of the rest of the tokens
+            # Map tokens to float
+            # TODO: WHat to do about divisions by zero ? Some measurement stake too little time and get rounded to 0
+            tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
+            tokens.sort()
+            median = tokens[(len(tokens) // 2)]
+            deviation = 0
+            for token in tokens:
+                deviation += (float(token) - median) ** 2
+            x1.append(np.log2(n))
+            y1.append(median)
+            z1.append(deviation)
+    with open(f"out/ex4c_b1.txt", "r") as file:
+        for line in file:
+            # Run benchmark
+            tokens = line.split()
+            n = int(tokens[0])
+            flops = get_flops_2(n)
+            
+            tokens = tokens[1:]
+            # Calculate median and deviation of the rest of the tokens
+            # Map tokens to float
+            tokens = list(map(lambda token: flops/(float(token)*CPU_FREQ), tokens))
+            tokens.sort()
+            median = tokens[(len(tokens) // 2)]
+            deviation = 0
+            for token in tokens:
+                deviation += (float(token) - median) ** 2
+            x2.append(np.log2(n))
+            y2.append(median)
+            z2.append(deviation)
+    # Plot graph x,y NO ERROBAR
+    color1 = "#BF4E30"
+    color2 = "#FF916A"
+    plt.figure(figsize=(20, 6), facecolor="white")
+    line1, = plt.plot(x1, y1, '^-', color=color1)
+    line2, = plt.plot(x2, y2, 'o-', color=color2)
+    plt.gca().set_facecolor("#E4E4E4")
+    # plt.gca().set_yticks(np.arange(min(y1+y2), max(y1+y2), (max(y1+y2)-min(y1+y2))/10), minor=False)
+    plt.gca().set_xticks(np.arange(min(x1), max(x1)+1, 1), minor=False)
+    plt.gca().set_yticks(np.arange(0, MAX_FLOPS+1, 1), minor=False)
+    # Mapping each xtick label to something different
+    plt.gca().set_xticklabels([f"$2^{{{int(i)}}}$" for i in np.arange(min(x1), max(x1)+1, 1)])
+    plt.gca().yaxis.grid(True, which='major', color='w', linestyle='-', linewidth=1.5)
+    plt.xlabel("Lenght of input vectors", fontsize=18, rotation=0, labelpad=10)
+    plt.ylabel("flops/cycles", fontsize=15, rotation=0, labelpad=20, ha='right')
+    # plt.xscale("log")
+    # Labeling the lines at custom positions
+    plt.text(x1[-3], y1[-2], "i) No optimizations", fontsize=12, va='center', ha='right', color=color1, fontweight='bold')
+    plt.text(x2[-2], y2[-1], "ii) All major optimizations", fontsize=12, va='center', ha='right', color=color2, fontweight='bold')
+    # Save plot as pdf
+    plt.savefig(f"out/ex4.pdf")
+    if show_plt:
+        plt.show()
 
 
 

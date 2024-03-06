@@ -32,7 +32,7 @@ out/ex2c_b3.txt: ex2/ex2c_3.o benchmark.c
 	gcc ex2/ex2c_3.o benchmark.c -o run_benchmark.o && ./run_benchmark.o ex2c_b3 out/ex2c_b3.txt
 
 out/ex2c.pdf: out/ex2c_b1.txt out/ex2c_b2.txt out/ex2c_b3.txt run_benchmark.py
-	python3 run_benchmark.py ex2c
+	python3 run_benchmark.py ex2c --no-show
 
 
 # EXERCISE 4
@@ -43,8 +43,10 @@ ex4/ex4c_1.o: ex4/lu4_optimized.c
 	gcc -c -DEXTERNAL -O3 -ffast-math -mcpu=apple-m1 -fno-tree-vectorize -fno-slp-vectorize -ffp-contract=fast ex4/lu4_optimized.c -o ex4/ex4c_1.o
 
 ## BENCHMARK
-ex4benchmark: out/ex4a_b1.txt out/ex4c_b1.txt
+ex4benchmark: out/ex4a_b1.txt out/ex4c_b1.txt out/ex4.pdf
 out/ex4a_b1.txt: ex4/ex4a_1.o benchmark.c
 	gcc ex4/ex4a_1.o benchmark.c -o run_benchmark.o && ./run_benchmark.o ex4a_b1 out/ex4a_b1.txt
-out/ex4c_b1.txt: ex4/ex4c_1.o benchmark.c
+out/ex4c_b1.txt: ex4/ex4c_1.o benchmark.c 
 	gcc ex4/ex4c_1.o benchmark.c -o run_benchmark.o && ./run_benchmark.o ex4c_b1 out/ex4c_b1.txt
+out/ex4.pdf: out/ex4a_b1.txt out/ex4c_b1.txt run_benchmark.py
+	python3 run_benchmark.py ex4 --no-show

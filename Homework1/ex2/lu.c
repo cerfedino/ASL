@@ -22,9 +22,15 @@
 #include <assert.h>
 #endif
 
+#ifdef EXTERNAL
+#define printf(fmt, ...) (0)
+#endif
+
+
 #define NUM_RUNS 5
 #define CYCLES_REQUIRED 1e8
-#define FREQUENCY 2e9
+#define FREQUENCY 2.53e9 // TODO: Say disclaimer about calculated frequency
+#define CLOCKS_PER_SEC  ((clock_t)1000000)	/* [XSI] */
 #define CALIBRATE
 
 /*
@@ -56,15 +62,14 @@ void fill_vector(double * x, int n) {
 /*
  * Straightforward implementation of lu decomposition
  */
-
 void compute(double L[], double U[], int n) {
     for (int i = 0; i < n; i++){
-        for (int j = i+1; j < n; j++){
-            double factor = U[j * n + i] / U[i * n + i];
-            for (int k = 0; k < n; k++){
-                U[j * n + k] -= factor * U[i * n + k];
+        for (int j = i+1; j < n; j++){                  // n^2
+            double factor = U[j * n + i] / U[i * n + i];    // 1d
+            for (int k = 0; k < n; k++){                    // n
+                U[j * n + k] -= factor * U[i * n + k];          // 1m + 1a   
             }
-            L[j*n + i] = factor;
+            L[j*n + i] = factor;                            
         }
     }
 }
@@ -297,7 +302,7 @@ double run(int argc, char **argv) {
 
 #ifndef WIN32
     double t = timeofday(A, L, U, n);
-    printf("C gettimeofday() function:\n %lf seconds measured\n\n",t);
+    printf("C gettimeofday() function:\n %.20f seconds measured\n\n",t);
 #else
     LARGE_INTEGER f;
     double t = gettickcount(A, L, U, n);
@@ -315,7 +320,7 @@ double run(int argc, char **argv) {
     #ifndef EXTERNAL
     return 0;
     #else
-    return c;
+    return t;
     #endif
 }
 

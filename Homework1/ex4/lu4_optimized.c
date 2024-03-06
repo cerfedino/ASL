@@ -23,10 +23,14 @@
 #define printf(fmt, ...) (0)
 #endif
 
-#define NUM_RUNS 1
+
+#define NUM_RUNS 5
 #define CYCLES_REQUIRED 1e8
-#define FREQUENCY 2e9
+#define FREQUENCY 2.53e9 // TODO: Say disclaimer about calculated frequency
 #define CALIBRATE
+
+
+
 
 /*
  *	Initialize the input
@@ -54,11 +58,9 @@ void fill_vector(double * x, int n) {
     }
 }
 
-/*
- * Straightforward implementation of lu decomposition
- */
-void compute(double *x, double *y, double *z, double *F, int n) {
-    for (int i = 1; i < n - 1; i++) {
+
+void compute(double *x, double *y, double *z, int n) {
+    for (int i = 0; i < n; i++) {
         for (int k = 0; k < 2; k++) {
             z[k] += x[i + 1 - k] * y[i + k];
         }
@@ -69,7 +71,7 @@ void compute(double *x, double *y, double *z, double *F, int n) {
  * Timing function based on the TimeStep Counter of the CPU.
  */
 #ifdef __x86_64__
-double rdtsc(double *x, double *y, double *z, double *F, int n) {
+double rdtsc(double *x, double *y, double *z, int n) {
     int i, num_runs;
     myInt64 cycles = 0;
     myInt64 start;
@@ -87,7 +89,7 @@ double rdtsc(double *x, double *y, double *z, double *F, int n) {
         for (i = 0; i < num_runs; ++i) {
             memcpy(z2, z, sizeof(double) * n);
             start = start_tsc();
-            compute(x,y,z2,F,n);
+            compute(x,y,z2,n);
             cycles += stop_tsc(start);
         }
 
@@ -101,17 +103,17 @@ double rdtsc(double *x, double *y, double *z, double *F, int n) {
     for (i = 0; i < num_runs; ++i) {
         memcpy(z2, z, sizeof(double) * n);
         start = start_tsc();
-        compute(x,y,z2,F,n);
+        compute(x,y,z2,n);
         cycles += stop_tsc(start);
     }
-    
+
     free(z2);
     cycles = cycles/num_runs;
     return (double) cycles;
 }
 #endif
 
-double c_clock(double *x, double *y, double *z, double *F, int n) {
+double c_clock(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles = 0;
     clock_t start, end;
@@ -123,7 +125,7 @@ double c_clock(double *x, double *y, double *z, double *F, int n) {
         for (i = 0; i < num_runs; ++i) {
             memcpy(z2, z, sizeof(double) * n);
             start = clock();
-            compute(x,y,z2,F,n);
+            compute(x,y,z2,n);
             end = clock();
             cycles += (double)(end - start);
         }
@@ -138,7 +140,7 @@ double c_clock(double *x, double *y, double *z, double *F, int n) {
     for(i=0; i<num_runs; ++i) {
         memcpy(z2, z, sizeof(double) * n);
         start = clock();
-        compute(x,y,z2,F,n);
+        compute(x,y,z2,n);
         end = clock();
         cycles += (double)(end - start);
     }
@@ -147,7 +149,7 @@ double c_clock(double *x, double *y, double *z, double *F, int n) {
 }
 
 #ifndef WIN32
-double timeofday(double *x, double *y, double *z, double *F, int n) {
+double timeofday(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles = 0;
     struct timeval start, end;
@@ -159,7 +161,7 @@ double timeofday(double *x, double *y, double *z, double *F, int n) {
         for (i = 0; i < num_runs; ++i) {
             memcpy(z2, z, sizeof(double) * n);
             gettimeofday(&start, NULL);
-            compute(x,y,z2,F,n);
+            compute(x,y,z2,n);
             gettimeofday(&end, NULL);
             cycles += (double)((end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec)/1e6)*FREQUENCY;
         }
@@ -174,18 +176,17 @@ double timeofday(double *x, double *y, double *z, double *F, int n) {
     for(i=0; i < num_runs; ++i) {
         memcpy(z2, z, sizeof(double) * n);
         gettimeofday(&start, NULL);
-        compute(x,y,z2,F,n);
+        compute(x,y,z2,n);
         gettimeofday(&end, NULL);
         seconds += (double)((end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec)/1e6);
     }
-
     free(z2);
     return seconds/num_runs;
 }
 
 #else
 
-double gettickcount(double *x, double *y, double *z, double *F, int n) {
+double gettickcount(double *x, double *y, double *z, int n) {
     int i, num_runs;
     double cycles, start, end;
     double *z2 = (double *)malloc(n*sizeof(double));
@@ -197,7 +198,7 @@ double gettickcount(double *x, double *y, double *z, double *F, int n) {
         for (i = 0; i < num_runs; ++i) {
             memcpy(z2, z, sizeof(double) * n);
             start = (double)GetTickCount();
-            compute(x,y,z2,F,n);
+            compute(x,y,z2,n);
             end = (double)GetTickCount();
             cycles += (double)(end - start);
         }
@@ -214,7 +215,7 @@ double gettickcount(double *x, double *y, double *z, double *F, int n) {
     for(i=0; i < num_runs; ++i) {
         memcpy(z2, z, sizeof(double) * n);
         start = (double)GetTickCount();
-        compute(x,y,z2,F,n);
+        compute(x,y,z2,n);
         end = (double)GetTickCount();
         cycles += (double)(end - start);
     }
@@ -223,7 +224,7 @@ double gettickcount(double *x, double *y, double *z, double *F, int n) {
     return cycles/num_runs;
 }
 
-double queryperfcounter(double *x, double *y, double *z, double *F, int n, LARGE_INTEGER f) {
+double queryperfcounter(double *x, double *y, double *z, int n, LARGE_INTEGER f) {
     int i, num_runs;
     double cycles = 0;
     LARGE_INTEGER start, end;
@@ -235,7 +236,7 @@ double queryperfcounter(double *x, double *y, double *z, double *F, int n, LARGE
         for (i = 0; i < num_runs; ++i) {
             memcpy(z2, z, sizeof(double) * n);
             QueryPerformanceCounter(&start);
-            compute(x,y,z2,F,n);
+            compute(x,y,z2,n);
             QueryPerformanceCounter(&end);
             cycles += (double)(end.QuadPart - start.QuadPart);
         }
@@ -251,11 +252,10 @@ double queryperfcounter(double *x, double *y, double *z, double *F, int n, LARGE
     for(i=0; i < num_runs; ++i) {
 		memcpy(z2, z, sizeof(double) * n);
         QueryPerformanceCounter(&start);
-        compute(x,y,z2,F,n);
+        compute(x,y,z2,n);
         QueryPerformanceCounter(&end);
         cycles += (double)(end.QuadPart - start.QuadPart);
     }
-
     free(z2);
     return cycles/num_runs;
 }
@@ -268,29 +268,25 @@ int main(int argc, char **argv) {
 double run(int argc, char **argv) {
 #endif
     printf("Benchmarking '%s'\n", __FILE__);
-    
+
     if (argc!=2) {printf("usage: FW <n>\n"); return -1;}
     int n = atoi(argv[1]);
     printf("n=%d \n",n);
 
-    // void compute(double *x, double *y, double *z, double *F, int n) {
-
     double* x = (double *)malloc(n*sizeof(double));
     double* y = (double *)malloc(n*sizeof(double));
     double* z = (double *)malloc(n*sizeof(double));
-    double* F = (double *)malloc(n*sizeof(double));
 
     fill_vector(x, n);
     fill_vector(y, n);
     fill_vector(z, n);
-    fill_vector(F, n);
 
 #ifdef __x86_64__
-    double r = rdtsc(x,y,z,F,n);
+    double r = rdtsc(x,y,z,n);
     printf("RDTSC instruction:\n %lf cycles measured => %lf seconds, assuming frequency is %lf MHz. (change in source file if different)\n\n", r, r/(FREQUENCY), (FREQUENCY)/1e6);
 #endif
 
-    double c = c_clock(z,y,z,F,n);
+    double c = c_clock(z,y,z,n);
     printf("C clock() function:\n %lf cycles measured. On some systems, this number seems to be actually computed "
            "from a timer in seconds then transformed into clock ticks using the variable CLOCKS_PER_SEC. Unfortunately, "
            "it appears that CLOCKS_PER_SEC is sometimes set improperly. (According to this variable, your computer should "
@@ -298,27 +294,26 @@ double run(int argc, char **argv) {
 
 
 #ifndef WIN32
-    double t = timeofday(x,y,z,F,n);
-    printf("C gettimeofday() function:\n %lf seconds measured\n\n",t);
+    double t = timeofday(x,y,z,n);
+    printf("C gettimeofday() function:\n %.20f seconds measured\n\n",t);
 #else
     LARGE_INTEGER f;
-    double t = gettickcount(x,y,z,F,n);
+    double t = gettickcount(x,y,z,n);
     printf("Windows getTickCount() function:\n %lf milliseconds measured\n\n",t);
 
     QueryPerformanceFrequency((LARGE_INTEGER *)&f);
 
-    double p = queryperfcounter(x,y,z,F,n, f);
+    double p = queryperfcounter(x,y,z,n, f);
     printf("Windows QueryPerformanceCounter() function:\n %lf cycles measured => %lf seconds, with reported CPU frequency %lf MHz\n\n",p,p/f.QuadPart,(double)f.QuadPart/1000);
 #endif
 
     free(x);
     free(y);
     free(z);
-    free(F);
     #ifndef EXTERNAL
     return 0;
     #else
-    return c;
+    return t;
     #endif
 }
 
