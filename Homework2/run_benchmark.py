@@ -19,7 +19,7 @@ name = sys.argv[1]
 
 if name == "ex2":
     def get_flops():
-        return 11 + 50*(7 + 16*(42) + 1*(28))
+        return 11 + 50*(7 + 16*(51) + 1*(32))
     def percentage_peak_performance(perf):
         return perf/ 2
     # Open txt file and read line by line
