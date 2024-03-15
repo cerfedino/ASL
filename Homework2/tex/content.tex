@@ -56,13 +56,16 @@ We notice how precomputing the cosine values yields by far the biggest performan
 \end{figure}
 
 \subsubsection{} % b)
-The \texttt{V3} implementation performs 50 iterations in outer loop and 16 in the inner loop, therefore $W =\input{../out/ex2_b_flopsformula.txt} = \input{../out/ex2_b_flops.txt}$ flops. The performance is therefore $\pi = \frac{\input{../out/ex2_b_flops.txt}}{\input{../out/ex2_a_v3.txt}} = \input{../out/ex2_b.txt}$ flops/cycle.
+The \texttt{V3} implementation performs 50 iterations in outer loop and 16 in the inner loop, therefore $W =\input{../out/ex2_b_flopsformula.txt} = \input{../out/ex2_b_flops.txt}$ flops. The performance is therefore $\pi = \frac{\input{../out/ex2_b_flops.txt}}{\input{../out/ex2_a_v3.txt}} = \input{../out/ex2_b.txt}$ flops/cycle. \textbf{Note:} When evaluating the flops, the \texttt{abs} and \texttt{cos} functions have been assumed to be 1 floating point operation each.
 \subsubsection{} % c)
 The theoretical peak performance is 2 flops/cycles. The performance of the \texttt{V3} implementation is $\input{../out/ex2_b.txt}$ flops/cycle, which is $\input{../out/ex2_c.txt}$\% of the theoretical peak performance.
 
 \subsection{Microbenchmarks (40 pts)}
 \subsubsection{} % a)
-
+Yes, the Intel Optimization manual reports that the FP ADD instructions takes 4 cycles with a throughput of 0.5, and indeed our microbenchmark confirms it.\\
+Furhtermore, a latency of 14 cycles and a throughput of 6 cycles for the square root instruction is reported, also confirmed by our microbenchmarks.
 \subsubsection{} % b)
-
+The function \textit{foo()} consists of 2 FP multiplication and 1 square root operation. The reported (and mesured) latencies are 4 cycles for mults and 18 for the sqrt operation. This results in a theoretical latency of $4(2)+18(1)=26$ cycles, which is consistent with our microbenchmarks. The reciprocal throughput is bottlenecked by the troughput of the square root operation, therefore resulting in an overall reciprocal throughput of 6 cycles.
 \subsubsection{} % c)
+Let us examine function $f_2(a) = a \cdot \sqrt{a}$.\\
+As confirmed by our microbenchmarks, the latency of the multiplication operation is 4 cycles, and the latency of the square root operation is 18 cycles, resulting in an total latency of $22$. The reciprocal throughput instead does not change from the previous case, and is still 6 cycles.

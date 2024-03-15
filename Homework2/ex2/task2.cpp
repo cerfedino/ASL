@@ -36,6 +36,8 @@ void v3(mat* x, mat* y, mat* z) {
     outerSqrts[4] = 1 / sqrt(x->data[4]);
     outerSqrts[5] = 1 / sqrt(x->data[5]);
 
+    // 19 flops
+
     // 2x loop unrolling
     for (int i = 0; i < 100; i += 2) {
         double sqrt1 = 1 / sqrt(y->data[i * 100]);
@@ -66,6 +68,8 @@ void v3(mat* x, mat* y, mat* z) {
             t[9] = (z->data[t2_idx + 4] * recipCosines[4] + x->data[t2_idx + 4]) * outerCosine[1];
             t[10] = (z->data[t1_idx + 5] * recipInnerSqrts[5] + y->data[t1_idx + 5]) * outerCosine[2];
             t[11] = (z->data[t2_idx + 5] * recipCosines[5] + x->data[t2_idx + 5]) * outerCosine[2];
+            
+            // 36 flops
 
             t[0] = t[0] > 0 ? t[0] * ALPHA + 1 : abs(t[0]) + 1;
             t[1] = t[1] > 0 ? t[1] * ALPHA + 1 : abs(t[1]) + 1;
@@ -79,6 +83,8 @@ void v3(mat* x, mat* y, mat* z) {
             t[9] = t[9] > 0 ? t[9] * ALPHA + 1 : abs(t[9]) + 1;
             t[10] = t[10] > 0 ? t[10] * ALPHA + 1 : abs(t[10]) + 1;
             t[11] = t[11] > 0 ? t[11] * ALPHA + 1 : abs(t[11]) + 1;
+
+            // 36
 
 
             z->data[t1_idx] = t[0];
