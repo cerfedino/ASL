@@ -1,0 +1,60 @@
+\documentclass[tikz,14pt,fleqn]{article}
+
+\input{headers.sty}
+
+
+\usepackage[utf8]{inputenc}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% VARIABLES
+\newcommand\namesurname{Albert Cerfeda (20-980-272)}
+\newcommand\assignment{Homework 4}
+
+\newcommand\subject{Advanced Systems Lab}
+\newcommand\documentdate{9.04.2024}
+
+% Title content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\rhead{\assignment}
+\lhead{\namesurname}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\rfoot{Page \thepage}
+
+
+\begin{document}
+
+\begin{titlepage}
+   \begin{center}
+       \vspace*{0.2cm}
+
+       \textbf{\Large{\subject}}
+
+       \vspace{0.5cm}
+        \textbf{\assignment}\\[5mm]
+        
+            
+       \vspace{0.4cm}
+
+        \namesurname
+        \begin{figure}[H]
+            \centering
+        \end{figure}
+       \tableofcontents
+
+       \vspace*{\fill}
+     
+        \includegraphics[width=0.3\textwidth]{fig/eth_logo_kurz_pos.eps}
+       
+        \documentdate \\
+        Eidgenössische Technische Hochschule Zürich\\
+        D-INFK Department\\
+        Switzerland\\
+
+   \end{center}
+\end{titlepage}
+
+\input{content.tex}
+
+\end{document}
