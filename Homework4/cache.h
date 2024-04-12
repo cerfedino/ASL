@@ -1,9 +1,4 @@
-#include <stdio.h>
 #include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
 
 struct cache_block {
     // Uses content address instead of the actual content for simplicity
@@ -44,3 +39,5 @@ int cache_get_LRU(cache_t* cache, int set_idx);
 // Given a byte pointer, tries to read the content from the cache. If the content is not in the cache, it is loaded into the cache. Returns 1 if its a hit, 0 if its a miss
 // The string_identifier is used for debugging purposes. The string gets stored inside the cache block.
 int cache_access(cache_t *cache, char* ptr, char* string_identifier);
+// Prints the cache contents formatted as a LaTeX table
+void cache_print(cache_t *cache);

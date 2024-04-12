@@ -6,7 +6,6 @@
 #include "cache.h"
 
 
-
 cache_t* cache_init(int BLOCK_SIZE, int CACHE_SIZE, int ASSOCIAVITY, char* MEM_OFFSET) {
     cache_t* cache = malloc(sizeof(cache_t));
     cache->BLOCK_SIZE = BLOCK_SIZE;
@@ -83,4 +82,29 @@ int cache_access(cache_t *cache, char* ptr, char* string_identifier) {
     strncpy(set.blocks[LRU_idx].content, string_identifier, 20);
     cache_update_LRU(cache, set_idx, LRU_idx);
     return 0;
+}
+
+
+void cache_print(cache_t *cache) {
+    printf("\n");
+    printf("\\begin{table}[h!]\n\\begin{tabular}{|c|");
+    for (int i = 0; i < cache->ASSOCIAVITY; i++) {
+        printf("c|");
+    }
+    printf("}\nSet ");
+    for (int i = 0; i < cache->ASSOCIAVITY; i++) {
+        printf("& Block %d ", i);
+    }
+    printf("\\\\ \\hline");
+    for (int i = 0; i < cache->SETS; i++) {
+        printf("\n%d ", i);
+        for (int j = 0; j < cache->ASSOCIAVITY; j++) {
+            if(strcmp(cache->sets[i].blocks[j].content, "") == 0)
+                printf("& - ");
+            else
+                printf("& %s ", cache->sets[i].blocks[j].content, cache->sets[i].blocks[j].content + 10);
+        }
+        printf("\\\\ \\hline");
+    }
+    printf("\n\\end{tabular}\n\\end{table}\\\\");
 }

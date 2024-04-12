@@ -6,12 +6,6 @@
 #include "cache.h"
 
 
-// void print_cache() {
-//     for (int i = 0; i < SETS; i++) {
-//         printf("%d & $%s$ & $%s$ \\\\ \\hline\n", i, cache[i].f1, cache[i].f2);
-//     }
-// }
-
 
 cache_t* default_cache;
 
