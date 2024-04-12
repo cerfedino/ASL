@@ -10,5 +10,5 @@ ex1.out: ex1.c cache.c cache.h
 
 ex2: ex2.out
 	./ex2.out
-ex2.out: ex2a.c cache.c cache.h
-	gcc ex2a.c cache.c -o ex2.out
+ex2.out: ex2.c cache.c cache.h
+	gcc ex2.c cache.c -o ex2.out

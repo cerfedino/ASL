@@ -39,7 +39,7 @@ float comp(data_t x[10], data_t y[10]) {
 
             // sprintf(cmp.f1, "y_%d.a", y_idx);
             // sprintf(cmp.f2, "y_%d.b", y_idx);
-            sprintf(string_identifier, "$y_%d.a$\\quad$y_%d.b$", x_idx,x_idx);
+            sprintf(string_identifier, "$y_%d.a$\\quad$y_%d.b$", y_idx,y_idx);
             y_pattern[y_pattern_idx++] = cache_access(default_cache, &(y[y_idx].b), string_identifier) ? 'H' : 'M';
 
         }
@@ -70,7 +70,7 @@ float comp(data_t x[10], data_t y[10]) {
             x_pattern[x_pattern_idx++] = cache_access(default_cache, &(x[x_idx].c), string_identifier) ? 'H' : 'M';
             
 
-            sprintf(string_identifier, "$y_%d.c$\\quad$y_%d.d$", x_idx,x_idx);
+            sprintf(string_identifier, "$y_%d.c$\\quad$y_%d.d$", y_idx,y_idx);
             y_pattern[y_pattern_idx++] = cache_access(default_cache, &(y[y_idx].d), string_identifier) ? 'H' : 'M';
 
             // float x0 = x[i1 * (i1 + j1) % 7].c;

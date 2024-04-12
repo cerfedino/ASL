@@ -32,11 +32,13 @@ We have 112 iterations and a total of 448 memory accesses, 92 of which are cache
 \subsubsection{Access patterns and state of direct-mapped cache}
 \begin{enumerate}[label=\roman*. ]
 \item Cache at line 18\\
-\textbf{- i = 0}\\
-x: \textbf{MMM}\\
-y: \textbf{MMM}
 \begin{table}[h!]
-    \begin{tabular}{|c|c|}
+\begin{tabular}[t]{l}
+    i = 0\\
+    x: \textbf{MMM}\\
+    y: \textbf{MMM}\\
+\end{tabular}
+\begin{tabular}[t]{|c|c|}
     Set & Block 0 \\ \hline
     0 & $y_2.a$\quad$y_2.b$ \\ \hline
     1 & - \\ \hline
@@ -47,51 +49,56 @@ y: \textbf{MMM}
     6 & - \\ \hline
     7 & - \\ \hline
     \end{tabular}
-    \end{table}\\
-\textbf{- i = 1}\\
-x: \textbf{HHH}\\
-y: \textbf{MHH}\\
+\end{table}\\
 \begin{table}[h!]
-    \begin{tabular}{|c|c|}
+    \begin{tabular}[t]{l}
+        i = 1\\
+        x: \textbf{HHH}\\
+        y: \textbf{MHH}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|}
     Set & Block 0 \\ \hline
     0 & $y_2.a$\quad$y_2.b$ \\ \hline
     1 & - \\ \hline
-    2 & $y_2.a$\quad$y_2.b$ \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ \\ \hline
     3 & - \\ \hline
     4 & $x_2.a$\quad$x_2.b$ \\ \hline
     5 & - \\ \hline
     6 & - \\ \hline
     7 & - \\ \hline
     \end{tabular}
-    \end{table}
+\end{table}\\
 \item Cache at line 30\\
-\textbf{- i = 0}\\
-x: \textbf{MMM}\\
-y: \textbf{MMM}
 \begin{table}[h!]
-    \begin{tabular}{|c|c|}
+    \begin{tabular}[t]{l}
+        i = 0\\
+        x: \textbf{MMM}\\
+        y: \textbf{MMM}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|}
     Set & Block 0 \\ \hline
     0 & $y_2.a$\quad$y_2.b$ \\ \hline
-    1 & $y_5.c$\quad$y_5.d$ \\ \hline
-    2 & $y_2.a$\quad$y_2.b$ \\ \hline
+    1 & $y_6.c$\quad$y_6.d$ \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ \\ \hline
     3 & $x_5.c$\quad$x_5.d$ \\ \hline
     4 & $x_2.a$\quad$x_2.b$ \\ \hline
     5 & $y_0.c$\quad$y_0.d$ \\ \hline
     6 & - \\ \hline
     7 & - \\ \hline
     \end{tabular}
-    \end{table}
-
-\textbf{- i = 1}\\
-x: \textbf{MMM}\\
-y: \textbf{MHM}
+\end{table}\\
 \begin{table}[h!]
-    \begin{tabular}{|c|c|}
+    \begin{tabular}[t]{l}
+        i = 1\\
+        x: \textbf{MMM}\\
+        y: \textbf{MHM}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|}
     Set & Block 0 \\ \hline
     0 & $y_2.a$\quad$y_2.b$ \\ \hline
-    1 & $y_5.c$\quad$y_5.d$ \\ \hline
-    2 & $y_2.a$\quad$y_2.b$ \\ \hline
-    3 & $y_5.c$\quad$y_5.d$ \\ \hline
+    1 & $y_6.c$\quad$y_6.d$ \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ \\ \hline
+    3 & $y_3.c$\quad$y_3.d$ \\ \hline
     4 & $x_2.a$\quad$x_2.b$ \\ \hline
     5 & $x_2.c$\quad$x_2.d$ \\ \hline
     6 & - \\ \hline
@@ -102,59 +109,74 @@ y: \textbf{MHM}
 \clearpage
 \subsubsection{Access patterns and state of 2-way associative cache}
 \begin{enumerate}[label=\roman*. ]
-    \item Cache at line 18\\
-    \textbf{- i = 0}\\
-    x: \textbf{MMM}\\
-    y: \textbf{MMM}
-    \begin{table}[h!]
-        \begin{tabular}{|c|c|c|}
-        Set & Block 0 & Block 1 \\ \hline
-        0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
-        1 & - & - \\ \hline
-        2 & - & - \\ \hline
-        3 & - & - \\ \hline
-        \end{tabular}
-        \end{table}\\
-    \textbf{- i = 1}\\
-    x: \textbf{HHH}\\
-    y: \textbf{MHH}
-    \begin{table}[h!]
-        \begin{tabular}{|c|c|c|}
-        Set & Block 0 & Block 1 \\ \hline
-        0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
-        1 & - & - \\ \hline
-        2 & $y_2.a$\quad$y_2.b$ & - \\ \hline
-        3 & - & - \\ \hline
-        \end{tabular}
-        \end{table}
-    \item Cache at line 30\\
-    \textbf{- i = 0}\\
-    x: \textbf{MMM}\\
-    y: \textbf{MMM}
-    \begin{table}[h!]
-        \begin{tabular}{|c|c|c|}
-        Set & Block 0 & Block 1 \\ \hline
-        0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
-        1 & $y_5.c$\quad$y_5.d$ & $y_0.c$\quad$y_0.d$ \\ \hline
-        2 & $y_2.a$\quad$y_2.b$ & - \\ \hline
-        3 & $x_5.c$\quad$x_5.d$ & - \\ \hline
-        \end{tabular}
-        \end{table}
-    
-    \textbf{- i = 1}\\
-    x: \textbf{MMH}\\
-    y: \textbf{MMH}
-    \begin{table}[h!]
-        \begin{tabular}{|c|c|c|}
-        Set & Block 0 & Block 1 \\ \hline
-        0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
-        1 & $x_2.c$\quad$x_2.d$ & $y_2.c$\quad$y_2.d$ \\ \hline
-        2 & $y_2.a$\quad$y_2.b$ & - \\ \hline
-        3 & $x_5.c$\quad$x_5.d$ & $y_6.c$\quad$y_6.d$ \\ \hline
-        \end{tabular}
-        \end{table}
+\item Cache at line 18\\
+\begin{table}[h!]
+    \begin{tabular}[t]{l}
+        i = 0\\
+        x: \textbf{MMM}\\
+        y: \textbf{MMM}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|c|}
+    Set & Block 0 & Block 1 \\ \hline
+    0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
+    1 & - & - \\ \hline
+    2 & - & - \\ \hline
+    3 & - & - \\ \hline
+    \end{tabular}
+\end{table}\\
+\begin{table}[h!]
+    \begin{tabular}[t]{l}
+        i = 1\\
+        x: \textbf{HHH}\\
+        y: \textbf{MHH}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|c|}
+    Set & Block 0 & Block 1 \\ \hline
+    0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
+    1 & - & - \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ & - \\ \hline
+    3 & - & - \\ \hline
+    \end{tabular}
+\end{table}
+\item Cache at line 30\\
+\begin{table}[h!]
+    \begin{tabular}[t]{l}
+        i = 0\\
+        x: \textbf{MMM}\\
+        y: \textbf{MMM}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|c|}
+    Set & Block 0 & Block 1 \\ \hline
+    0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
+    1 & $y_6.c$\quad$y_6.d$ & $y_0.c$\quad$y_0.d$ \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ & - \\ \hline
+    3 & $x_5.c$\quad$x_5.d$ & - \\ \hline
+    \end{tabular}
+\end{table}\\
+\begin{table}[h!]
+    \begin{tabular}[t]{l}
+        i = 1\\
+        x: \textbf{MMH}\\
+        y: \textbf{MMH}\\
+    \end{tabular}
+    \begin{tabular}[t]{|c|c|c|}
+    Set & Block 0 & Block 1 \\ \hline
+    0 & $x_2.a$\quad$x_2.b$ & $y_2.a$\quad$y_2.b$ \\ \hline
+    1 & $x_2.c$\quad$x_2.d$ & $y_6.c$\quad$y_6.d$ \\ \hline
+    2 & $y_3.a$\quad$y_3.b$ & - \\ \hline
+    3 & $x_5.c$\quad$x_5.d$ & $y_3.c$\quad$y_3.d$ \\ \hline
+    \end{tabular}
+    \end{table}
 \end{enumerate}
 \subsection{Rooflines (40 pts)}
+\subsubsection{Roofline plot}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{../out/ex3a.pdf}
+\end{figure}
+\subsubsection{Scalar performance bounds}
+
+\subsubsection{SIMD performance bounds}
 
 
 \subsection{Cache miss analysis (25 pts)}
