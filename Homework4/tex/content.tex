@@ -5,27 +5,26 @@
 
 \subsection{Stride access (30 pts)}
 \subsubsection{Direct-mapped cache, $s=1$ $n=8$}
-The cache is direct-mapped, has blocks of size 32 bytes and a total capacity of 1 KiB. This means that there are $\frac{2^{10}}{32} = 32$ cache blocks. Each cache block/line contains 32 bytes (8 doubles).\\
+The cache is direct-mapped, has blocks of size 32 bytes and a total capacity of 1 KiB. This means that there are $\frac{2^{10}}{32} = 32$ cache blocks. Each cache block/line contains 32 bytes (4 doubles).\\
 
-Since $n=8$, we can infer how the cache is able to hold both matrix $A$ and $O$ in their entirety.
+The access pattern of matrix $O$ is the following: Each element is accessed sequentially from row $0$ to row $n-3=5$. Therefore in total there are 12 compulsory cache misses, two for each row of $O$.
 
-The access pattern of matrix $O$ is the following: Each element is accessed sequentially from row $0$ to row $n-3=5$. Therefore in total there are 6 compulsory cache misses, one for each row of $O$.
+Regarding the access pattern of $A$ instead, at each iteration, the corresponding elements at row $i-1$ and $i+1$ are accessed. Similar to before we only have 16 compulsory cache misses, two for each row of $A$.
 
-Regarding the access pattern of $A$ instead, at each iteration, the corresponding elements at row $i-1$ and $i+1$ are accessed. Similar to before we only have 8 compulsory cache misses, one for each row of $A$.
-
-We have a total of 192 memory accesses. 15 of which are compulsory cache misses, after which all the rows of $A$ and $O$ are in the cache. Therefore the cache miss rate is $\frac{15}{192}  = 0.078125\%$.\vspace*{-0.4cm}
+We have a total of 192 memory accesses. 28 of which are compulsory cache misses, after which all the rows of $A$ and $O$ are in the cache. Therefore the cache miss rate is $\frac{28}{192}  = 14.583333\%$.\vspace*{-0.4cm}
 \subsubsection{Direct-mapped cache, $s=2$ $n=16$}
-The cache structure is analagous as before. The main difference is that since matrix $A$ and $O$ are $16\times16$, the cache can only store exactly one of them at a time. In other words, elements from $A$ and $O$ with the same coordinates map to the same cache location.\\
-By increasing the stride to 2, not every element of $A$ is accessed. In fact, the columns are covered in an alternating pattern, resulting in only half of the elements  being accessed. Matrix $O$ is still accessed in a sequential manner.
+The cache structure is analagous as before. The main difference is that since matrix $A$ and $O$ are $16\times16$, the cache can only store exactly half of one of them at a time. Therefore, elements from $A$ and $O$ with the same coordinates map to the same cache location.\\
+By increasing the stride to 2, not every element of $A$ is accessed. In fact, the columns are covered in an alternating pattern, resulting in only half of the elements being accessed. Matrix $O$ is still accessed in a sequential manner.
 
 In the first 4 iterations, the cache gets repeatedly evicted because the first 4 elements of $O$ share the same cache block as the first elements of $A$. After the initial 4 iterations, this light form of thrashing stops, resulting only in compulsory cache misses.
 
-We have 112 iterations and a total of 448 memory accesses, 66 of which are cache misses, therefore the cache miss rate is $\frac{66}{448} = 0.14732143\%$.\vspace*{-0.4cm}
+We have 112 iterations and a total of 448 memory accesses, 107 of which are cache misses, therefore the cache miss rate is $\frac{107}{448} = 23.883929\%$.\vspace*{-0.4cm}
 
 \subsubsection{2-way associatice cache, $s=2$ $n=16$}
 % TODO: Idk wtf Im writing here
 Since the cache is 2-way associative, it has 16 sets with 2 cache lines each. Each row of $A$ and $O$ is 16 doubles, meaning that two cache blocks are needed to store one full row.
 
+We have 112 iterations and a total of 448 memory accesses, 92 of which are cache misses, therefore the cache miss rate is $\frac{92}{448} = 20.535714\%$.\vspace*{-0.4cm}
 
 
 % total accesses  = 8*8 + 8*6 = 112
@@ -38,7 +37,7 @@ x: \textbf{MMM}\\
 y: \textbf{MMM}
 \begin{table}[h!]
 \begin{tabular}{|c|cc|}
-    Set & Block 1 & Block 2 \\ \hline\hline
+    Set & \multicolumn{2}{c|}{Block 0} \\ \hline\hline
     0 & $y_2.a$ & $y_2.b$ \\ \hline
     1 & $$ & $$ \\ \hline
     2 & $$ & $$ \\ \hline
@@ -54,7 +53,7 @@ x: \textbf{HHH}\\
 y: \textbf{MHH}\\
 \begin{table}[h!]
 \begin{tabular}{|c|cc|}
-    Set & Block 1 & Block 2 \\ \hline\hline
+    Set & \multicolumn{2}{c|}{Block 0} \\ \hline\hline
     0 & $y_2.a$ & $y_2.b$ \\ \hline
     1 & $$ & $$ \\ \hline
     2 & $y_3.a$ & $y_3.b$ \\ \hline
@@ -71,7 +70,7 @@ x: \textbf{MMM}\\
 y: \textbf{MMM}
 \begin{table}[h!]
 \begin{tabular}{|c|cc|}
-    Set & Block 1 & Block 2 \\ \hline\hline
+    Set & \multicolumn{2}{c|}{Block 0} \\ \hline\hline
     0 & $y_2.a$ & $y_2.b$ \\ \hline
     1 & $y_6.c$ & $y_6.d$ \\ \hline
     2 & $y_3.a$ & $y_3.b$ \\ \hline
@@ -88,7 +87,7 @@ x: \textbf{MMM}\\
 y: \textbf{MHM}
 \begin{table}[h!]
 \begin{tabular}{|c|cc|}
-    Set & Block 1 & Block 2 \\ \hline\hline
+    Set & \multicolumn{2}{c|}{Block 0} \\ \hline\hline
     0 & $y_2.a$ & $y_2.b$ \\ \hline
     1 & $y_6.c$ & $y_6.d$ \\ \hline
     2 & $y_3.a$ & $y_3.b$ \\ \hline
@@ -109,7 +108,7 @@ y: \textbf{MHM}
     y: \textbf{MMM}
     \begin{table}[h!]
     \begin{tabular}{|c|cc|cc|}
-        Set & Line 1 - Block 1 & Line 1 - Block 2 & Line 2 - Block 1 & Line 2 - Block 2 \\ \hline\hline
+        Set & \multicolumn{2}{c|}{Block 0} & \multicolumn{2}{c|}{Block 1} \\ \hline\hline
         0 & $x_2.a$ & $x_2.b$ & $y_2.a$ & $y_2.b$ \\ \hline 
         1 & $$ & $$ & $$ & $$ \\ \hline 
         2 & $$ & $$ & $$ & $$ \\ \hline 
@@ -121,7 +120,7 @@ y: \textbf{MHM}
     y: \textbf{MHH}
     \begin{table}[h!]
     \begin{tabular}{|c|cc|cc|}
-        Set & Line 1 - Block 1 & Line 1 - Block 2 & Line 2 - Block 1 & Line 2 - Block 2 \\ \hline\hline
+        Set & \multicolumn{2}{c|}{Block 0} & \multicolumn{2}{c|}{Block 1} \\ \hline\hline
         0 & $x_2.a$ & $x_2.b$ & $y_2.a$ & $y_2.b$ \\ \hline 
         1 & $$ & $$ & $$ & $$ \\ \hline 
         2 & $y_3.a$ & $y_3.b$ & $$ & $$ \\ \hline 
@@ -134,7 +133,7 @@ y: \textbf{MHM}
     y: \textbf{MMM}
     \begin{table}[h!]
     \begin{tabular}{|c|cc|cc|}
-        Set & Line 1 - Block 1 & Line 1 - Block 2 & Line 2 - Block 1 & Line 2 - Block 2 \\ \hline\hline
+        Set & \multicolumn{2}{c|}{Block 0} & \multicolumn{2}{c|}{Block 1} \\ \hline\hline
         0 & $x_2.a$ & $x_2.b$ & $y_2.a$ & $y_2.b$ \\ \hline 
         1 & $y_6.c$ & $y_6.d$ & $y_0.c$ & $y_0.d$ \\ \hline 
         2 & $y_3.a$ & $y_3.b$ & $$ & $$ \\ \hline 
@@ -147,7 +146,7 @@ y: \textbf{MHM}
     y: \textbf{MMH}
     \begin{table}[h!]
         \begin{tabular}{|c|cc|cc|}
-        Set & Line 1 - Block 1 & Line 1 - Block 2 & Line 2 - Block 1 & Line 2 - Block 2 \\ \hline\hline
+        Set & \multicolumn{2}{c|}{Block 0} & \multicolumn{2}{c|}{Block 1} \\ \hline\hline
         0 & $x_2.a$ & $x_2.b$ & $y_2.a$ & $y_2.b$ \\ \hline 
         1 & $x_2.c$ & $x_2.d$ & $y_6.c$ & $y_6.d$ \\ \hline 
         2 & $y_3.a$ & $y_3.b$ & $$ & $$ \\ \hline 
