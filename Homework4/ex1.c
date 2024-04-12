@@ -17,11 +17,11 @@ cache_t* default_cache;
 
 
 double stencil(double* A, int lda) {
-    cache_read(default_cache, A + 0);
+    cache_access(default_cache, A + 0, "");
     double acc = A[0];
-    cache_read(default_cache, A - lda);
+    cache_access(default_cache, A - lda, "");
     acc += A[-lda];
-    cache_read(default_cache, A + lda);
+    cache_access(default_cache, A + lda, "");
     acc += A[lda];
     return acc;
 }
@@ -30,7 +30,7 @@ void comp(double* A, double* O, int n, int s) {
     for (int i = 1; i < n - 1; i++) {
         for (int j = 0, jj = 0; j < n; j += s, jj++) {
             O[(i - 1) * n / s + jj] = stencil(&A[i * n + j], n);
-            cache_read(default_cache, O + (i - 1) * n / s + jj); 
+            cache_access(default_cache, O + (i - 1) * n / s + jj, ""); 
         }
     }
 }

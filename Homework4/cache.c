@@ -57,7 +57,7 @@ int cache_get_LRU(cache_t* cache, int set_idx) {
     return max_LRU_idx;
 }
 
-int cache_read(cache_t *cache, char* ptr) {
+int cache_access(cache_t *cache, char* ptr, char* string_identifier) {
     cache->total_accesses++;
 
     ptrdiff_t mem_addr = ptr - cache->MEM_OFFSET;
@@ -80,6 +80,7 @@ int cache_read(cache_t *cache, char* ptr) {
     cache->total_misses++;
     int LRU_idx = cache_get_LRU(cache, set_idx);
     set.blocks[LRU_idx].content_addr = block_addr;
+    strncpy(set.blocks[LRU_idx].content, string_identifier, 20);
     cache_update_LRU(cache, set_idx, LRU_idx);
     return 0;
 }
