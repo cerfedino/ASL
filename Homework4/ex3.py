@@ -3,9 +3,9 @@ from mpl_toolkits.axisartist.axislines import SubplotZero
 import numpy as np
 
 XMIN = 0.03125
-XMAX = 2**7
+XMAX = 2**4
 
-fig = plt.figure(figsize=(15, 6), facecolor="white")
+fig = plt.figure(figsize=(20, 12), facecolor="white")
 plt.gca().set_facecolor("#E4E4E4")
 
 
@@ -83,8 +83,8 @@ comp1_I = 3/16
 comp1_P_scalar = min(comp1_PEAK_scalar, MEM_BW * comp1_I)
 print("comp1_P_scalar", comp1_P_scalar)
 # Plot point
-plt.plot(comp1_I, comp1_P_scalar, 'o', color='black', label="comp1")
-plt.text(comp1_I, comp1_P_scalar, "\ncomp1", fontsize=8, ha='center', va='top')
+plt.plot(comp1_I, comp1_P_scalar, 'o', color='green', label="comp1")
+plt.text(comp1_I, comp1_P_scalar, "\ncomp1", color='green', fontsize=8, ha='center', va='top')
 #  Compute bound
 y_comp_scalar = [comp1_PEAK_scalar for i in x]
 plt.plot(x, y_comp_scalar, color='#55575C', linestyle='--', linewidth=1.4)
@@ -133,13 +133,40 @@ print("comp2_speedup", comp1_speedup)
 
 
 
-plt.legend(loc='upper right', fontsize=12)
-
 with open("out/ex3c_comp1_speedup.tex", "w") as f:
     f.write(f"{comp1_speedup}")
 with open("out/ex3c_comp2_speedup.tex", "w") as f:
     f.write(f"{comp2_speedup}")
 
 
+
+#### Exercise 3d    
+comp3_PEAK_scalar = 3
+comp3_I = lambda m: 3*m / 16
+
+#  Memory bound
+# comp3_P_scalar = min(comp3_PEAK_scalar, MEM_BW * comp3_I(1))
+# print("comp3_P_scalar", comp3_P_scalar)
+
+# with open("out/ex3d_comp3_P_scalar.tex", "w") as f:
+#     f.write(f"{comp3_P_scalar}")
+
+#### Exercise 3e
+
+comp3_I_x = []
+comp3_P_y = []
+for i in [4,8,32]:
+    comp3_PEAK_scalar = 3 * (SIMD_LEN/INT32) if i >= 8 else 3
+    comp3_P_scalar = min(comp3_PEAK_scalar, MEM_BW * comp3_I(i))
+    comp3_I_x.append(comp3_I(i))
+    comp3_P_y.append(comp3_P_scalar)
+    plt.text(comp3_I_x[-1], comp3_P_y[-1], f"\ncomp3\nm={i}", fontsize=8, ha='center', va='top')
+    print(f"comp3_P_scalar_{i}", comp3_P_scalar)
+
+
+plt.plot(comp3_I_x, comp3_P_y, '-o', color='blue', label="comp3")
+    
+plt.legend(loc='upper right', fontsize=12)
+plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05, wspace=0.2, hspace=0.2)
 plt.savefig("out/ex3a.pdf")
 plt.show()

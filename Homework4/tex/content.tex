@@ -16,13 +16,13 @@ We have a total of 192 memory accesses. 28 of which are compulsory cache misses,
 The cache structure is analagous as before. The main difference is that since matrix $A$ and $O$ are $16\times16$, the cache can only store exactly half of one of them at a time. Therefore, elements from $A$ and $O$ with the same coordinates map to the same cache location.\\
 By increasing the stride to 2, not every element of $A$ is accessed. In fact, the columns are covered in an alternating pattern, resulting in only half of the elements being accessed. Matrix $O$ is still accessed in a sequential manner.
 
-In the first 4 iterations, the cache gets repeatedly evicted because the first 4 elements of $O$ share the same cache block as the first elements of $A$. After the initial 4 iterations, this light form of thrashing stops, resulting only in compulsory cache misses.
+In the first 4 iterations, the cache gets repeatedly evicted because the first 4 elements of $O$ share the same cache block as the first elements of $A$. After the initial 4 iterations, this light form of thrashing stops, resulting mostly in compulsory cache misses.
 
 We have 112 iterations and a total of 448 memory accesses, 107 of which are cache misses, therefore the cache miss rate is $\frac{107}{448} = 23.883929\%$.\vspace*{-0.4cm}
 
 \subsubsection{2-way associatice cache, $s=2$ $n=16$}
 % TODO: Idk wtf Im writing here
-Since the cache is 2-way associative, it has 16 sets with 2 cache lines each. Each row of $A$ and $O$ is 16 doubles, meaning that two cache blocks are needed to store one full row.
+Since the cache is 2-way associative, it has 16 sets with 2 cache lines each. Each row of $A$ and $O$ is 16 doubles, meaning that four cache blocks are needed to store one full row.
 
 We have 112 iterations and a total of 448 memory accesses, 92 of which are cache misses, therefore the cache miss rate is $\frac{92}{448} = 20.535714\%$.\vspace*{-0.4cm}
 
@@ -172,19 +172,42 @@ We have 112 iterations and a total of 448 memory accesses, 92 of which are cache
 \subsubsection{Roofline plot}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=.8\linewidth]{../out/ex3a.pdf}
+    \includegraphics[width=\linewidth]{../out/ex3a.pdf}
     \caption{Roofline plot}
     \label{fig:roofline}
 \end{figure}
 \subsubsection{Scalar performance bounds}
-Both functions perform the same amount of work and memory reads, that is $16n^2$ bytes read and $3n^2$ iops.
+Both functions perform the same amount of work and compulsory memory reads, that is $16n^2$ bytes read and $3n^2$ iops, yielding an operational intensity of $3/16$ iops/byte.
 
 Based on the instruction mix, we notice how in \texttt{comp1} there is only one port for the \texttt{MAX} instruciton, resulting in a bottleneck. Because of it, the compute bound for \texttt{comp1} is $\pi=2$. On the other hand, \texttt{comp2} does not use the \texttt{MAX} instruction, resulting in the highest possible scalar compute bound of $\pi=3$.
 
 Considering the rooflines for the two functions, we can see that \texttt{comp1} is compute bound, while \texttt{comp2} is memory bound. Therefore the hard bound on performance on \texttt{comp1} is $\input{../out/ex3b_comp1_P_scalar}$ iops/cycle and on \texttt{comp2} is $\input{../out/ex3b_comp2_P_scalar}$ iops/cycle.
 
 \subsubsection{SIMD performance bounds}
-For this exercise we assume that every instruction has a SIMD counterpart. As such, since our architecture has 256-bit SIMD register, that allows us to perform 8-way integer operations. This results in the compute bound being higer, resulting in \texttt{comp1} and \texttt{comp2} having a speedup of $\input{../out/ex3c_comp1_speedup.tex}$ and $\input{../out/ex3c_comp2_speedup.tex}$ respectively.
+For this exercise we assume that every instruction has a SIMD counterpart. As such, since our architecture has 256-bit SIMD, that allows us to perform 8-way integer operations. This results in the compute bound being higher, resulting in \texttt{comp1} and \texttt{comp2} having a speedup of $\input{../out/ex3c_comp1_speedup.tex}$ and $\input{../out/ex3c_comp2_speedup.tex}$ respectively.
+
+\subsubsection{\texttt{comp3} scalar performance bounds}
+\texttt{comp3} performs $16(n*m)$ compulsory bytes reads and $3(n*m^2)$ integer work. This results in an operational intensity of $\frac{3m}{16}$ iops/byte. We can therefore derive the upper bound on performance to be $min(\frac{3m}{16}*15, 3)$
+
+\subsubsection{\texttt{comp3} performance bounds for $m=4,8,32$}
+\autoref{fig:roofline} shows the roofline plot for \texttt{comp3} with $m=4,8,32$. As requested by the exercise for $m=8,32$ we assume that the code is vectorized.
+
+
+
 
 \subsection{Cache miss analysis (25 pts)}
+\subsubsection{Cache miss analysis}
+In matrix $A$ we access the elements around the fiagonal by blocking" through the diagonal with non-overlapping blocks of size $b$x$b$. As $n$ is divisible by $b$, this results in accessing the elements inside $\frac{n}{b}$ blocks. Considering also matrix $B$ and $C$, in total we have $n(2b+\frac{b^2}{4})$ compulsory cache misses.
 
+\subsubsection{Minimum value of $\gamma$ yielding only compulsory misses}
+
+
+\subsubsection{Cache miss analysis for loop order $i$-$j$-$p$-$k$}
+
+
+\subsubsection{Storing nonzero blocks of $A$ continguously in memory}
+There a couple of performace benefits of storing the non-zero blocks of $A$ contiguously in memory. First of all, we would reduce the memory footprint of matrix $A$ by storing only nonzero blocks (i.e useful data), for large $n$, this reuslts in huge memory savings.
+
+Secondly it would improve the cache miss ratio as, since matrix $A$, $B$ and $C$ are stored contiguously, we have a higher canche that memory locations from separate matrices map to the same cache block, resulting in a higher cache hit rate, although when the cache is fully associative it does not matter.
+
+Thirdly, some processors have a prefetching module wich loads memory before it is requested. By storing only nonzero values, the data that is prefetched has guaranted to bee needed at some point by the BGEMM function.
