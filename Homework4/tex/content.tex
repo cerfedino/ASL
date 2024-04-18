@@ -172,12 +172,19 @@ We have 112 iterations and a total of 448 memory accesses, 92 of which are cache
 \subsubsection{Roofline plot}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\linewidth]{../out/ex3a.pdf}
+    \includegraphics[width=.8\linewidth]{../out/ex3a.pdf}
+    \caption{Roofline plot}
+    \label{fig:roofline}
 \end{figure}
 \subsubsection{Scalar performance bounds}
+Both functions perform the same amount of work and memory reads, that is $16n^2$ bytes read and $3n^2$ iops.
+
+Based on the instruction mix, we notice how in \texttt{comp1} there is only one port for the \texttt{MAX} instruciton, resulting in a bottleneck. Because of it, the compute bound for \texttt{comp1} is $\pi=2$. On the other hand, \texttt{comp2} does not use the \texttt{MAX} instruction, resulting in the highest possible scalar compute bound of $\pi=3$.
+
+Considering the rooflines for the two functions, we can see that \texttt{comp1} is compute bound, while \texttt{comp2} is memory bound. Therefore the hard bound on performance on \texttt{comp1} is $\input{../out/ex3b_comp1_P_scalar}$ iops/cycle and on \texttt{comp2} is $\input{../out/ex3b_comp2_P_scalar}$ iops/cycle.
 
 \subsubsection{SIMD performance bounds}
-
+For this exercise we assume that every instruction has a SIMD counterpart. As such, since our architecture has 256-bit SIMD register, that allows us to perform 8-way integer operations. This results in the compute bound being higer, resulting in \texttt{comp1} and \texttt{comp2} having a speedup of $\input{../out/ex3c_comp1_speedup.tex}$ and $\input{../out/ex3c_comp2_speedup.tex}$ respectively.
 
 \subsection{Cache miss analysis (25 pts)}
 

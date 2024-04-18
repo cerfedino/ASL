@@ -111,6 +111,11 @@ plt.text(comp2_I, comp2_P_scalar, "\ncomp2", fontsize=8, ha='center', va='top')
 # plt.text(0.04,y_comp_scalar[0], f"Peak $\pi$ scalar ({y_comp_scalar[0]} iops/cycle)", fontsize=12, va='bottom', ha='left', color='#55575C')
 
 
+with open("out/ex3b_comp1_P_scalar.tex", "w") as f:
+    f.write(f"{comp1_P_scalar}")
+with open("out/ex3b_comp2_P_scalar.tex", "w") as f:
+    f.write(f"{comp2_P_scalar}")
+
 #### Exercise 3c
 
 
