@@ -1,3 +1,5 @@
 #include <cmath>
 
-static double foo(double a) { return sqrt(a * a * a); }
+static double foo(double a) {
+  return sqrt(a*a*a);
+}

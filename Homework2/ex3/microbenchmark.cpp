@@ -1,16 +1,14 @@
 #include "include/microbenchmark.h"
-
-#include <stdio.h>
-
-#include "include/foo.h"
 #include "include/tsc_x86.h"
+#include "include/foo.h"
+#include <stdio.h>
 
 static myInt64 NUM_ITERATIONS;
 static double result;
 static myInt64 start;
 static myInt64 end;
 
-void initialize_microbenchmark_data(microbenchmark_mode_t mode) {
+void initialize_microbenchmark_data (microbenchmark_mode_t mode) {
     /* You can use to initialize some data if needed */
     switch (mode) {
         case ADD_LAT:
@@ -53,16 +51,16 @@ void initialize_microbenchmark_data(microbenchmark_mode_t mode) {
             NUM_ITERATIONS = 100000;
             result = -1;
             break;
-        default:
-            break;
+        default: break;
     }
 }
+
 
 double microbenchmark_get_add_latency() {
     double add = rand();
     /* Implement your microbenchmark benchmark here */
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result += add;
         result += add;
         result += add;
@@ -73,24 +71,25 @@ double microbenchmark_get_add_latency() {
     //     result2 = a + result3;
     // }
     // end = stop_tsc(start);
-
+    
     // WARMUP
-
+    
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result += add;
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result += add;
     }
     end = stop_tsc(start);
-
+    
     // printf("endLoop = %d, end=%d, endtime =%f\n", end, endtime);
-    return (double)end / NUM_ITERATIONS;
+    return (double)end/NUM_ITERATIONS;
 }
 
 double microbenchmark_get_add_rec_tp() {
-    double add = rand();
+        double add = rand();
     /* Implement your microbenchmark benchmark here */
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result += add;
         result += add;
         result += add;
@@ -101,84 +100,85 @@ double microbenchmark_get_add_rec_tp() {
     //     result2 = a + result3;
     // }
     // end = stop_tsc(start);
-
+    
     // WARMUP
-
+    
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result += add;
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result += add;
     }
     end = stop_tsc(start);
-
+    
     // printf("endLoop = %d, end=%d, endtime =%f\n", end, endtime);
-    return (double)end / (NUM_ITERATIONS * 8);
+    return (double)end/(NUM_ITERATIONS*8);
 }
 
 double microbenchmark_get_sqt_latency() {
     // global double result = rand();
     /* Implement your microbenchmark benchmark here */
-
+    
     // WARMUP
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result = sqrt(result);
     }
-
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result = sqrt(result);
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result = sqrt(result);
     }
     end = stop_tsc(start);
-
-    return (double)end / NUM_ITERATIONS;
+    
+    return (double)end/NUM_ITERATIONS;
 }
 
 double microbenchmark_get_sqt_rec_tp() {
-    // WARMUP
+        // WARMUP
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result = sqrt(result);
     }
-
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result = sqrt(result);
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result = sqrt(result);
     }
     end = stop_tsc(start);
-
-    return (double)end / (NUM_ITERATIONS * 3);
+    
+    return (double)end/(NUM_ITERATIONS*3);
 }
 
 double microbenchmark_get_foo_latency() {
-    // global double result = rand();
+        // global double result = rand();
     /* Implement your microbenchmark benchmark here */
-
+    
     // WARMUP
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result = foo(result);
     }
-
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result = foo(result);
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result = foo(result);
     }
     end = stop_tsc(start);
-
-    return (double)end / NUM_ITERATIONS;
+    
+    return (double)end/NUM_ITERATIONS;
 }
 
 double microbenchmark_get_foo_rec_tp() {
     int n;
-    for (n = 0; n < NUM_ITERATIONS; n++) {
+    for(n=0; n<NUM_ITERATIONS; n++) {
         result = foo(result);
     }
-
+    
     start = start_tsc();
-    for (n = 0; n < NUM_ITERATIONS; n++) {
-        result = foo(result);
+    for(n = 0; n<NUM_ITERATIONS; n++) {
+      result = foo(result);
     }
     end = stop_tsc(start);
-
-    return (double)end / (NUM_ITERATIONS * 5);
+    
+    return (double)end/(NUM_ITERATIONS*5);
 }

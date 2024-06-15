@@ -8,10 +8,6 @@
 using namespace std;
 
 
-// Version 3
-// 1. Moved independent computation of cosines, and reciprocal cosines outside of the loop
-// 2. Replaced divisions with multiplications by calculating reciprocals outside of the loop.
-// 3. Computed the reciprocal of cosines involved in division operations, in order to use multiplicaiton only inside of the loop
 void v3(mat* x, mat* y, mat* z) {
     double t[12];
 
@@ -36,7 +32,7 @@ void v3(mat* x, mat* y, mat* z) {
     outerSqrts[4] = 1 / sqrt(x->data[4]);
     outerSqrts[5] = 1 / sqrt(x->data[5]);
 
-    // 19 flops
+    // ## 11 flop
 
     // 2x loop unrolling
     for (int i = 0; i < 100; i += 2) {
@@ -68,9 +64,8 @@ void v3(mat* x, mat* y, mat* z) {
             t[9] = (z->data[t2_idx + 4] * recipCosines[4] + x->data[t2_idx + 4]) * outerCosine[1];
             t[10] = (z->data[t1_idx + 5] * recipInnerSqrts[5] + y->data[t1_idx + 5]) * outerCosine[2];
             t[11] = (z->data[t2_idx + 5] * recipCosines[5] + x->data[t2_idx + 5]) * outerCosine[2];
+            // 39
             
-            // 36 flops
-
             t[0] = t[0] > 0 ? t[0] * ALPHA + 1 : abs(t[0]) + 1;
             t[1] = t[1] > 0 ? t[1] * ALPHA + 1 : abs(t[1]) + 1;
             t[2] = t[2] > 0 ? t[2] * ALPHA + 1 : abs(t[2]) + 1;
@@ -83,8 +78,6 @@ void v3(mat* x, mat* y, mat* z) {
             t[9] = t[9] > 0 ? t[9] * ALPHA + 1 : abs(t[9]) + 1;
             t[10] = t[10] > 0 ? t[10] * ALPHA + 1 : abs(t[10]) + 1;
             t[11] = t[11] > 0 ? t[11] * ALPHA + 1 : abs(t[11]) + 1;
-
-            // 36
 
 
             z->data[t1_idx] = t[0];
@@ -137,11 +130,7 @@ void v3(mat* x, mat* y, mat* z) {
 }
 
 
-//  Version 2
-// 1. Simplified data fetching based on the modulo operator
-// 2. Moved computation of independent sqrts outside of the loop
-// 3. Computed the reciprocal of sqrts involved in division operations, in order to use multiplicaiton only inside of the loop
-// 3. Simplified fmax with ternary operator
+
 void v2(mat* x, mat* y, mat* z) {
     double t1;
     double t2;
@@ -249,11 +238,7 @@ void v2(mat* x, mat* y, mat* z) {
 }
 
 
-//  Version 1
-// 1. Replaced calls to mat_get, mat_set and mat_activate with direct access to
-// the data array
-// 2. Used n=100 constant for matrix bound check.
-// 3. Used loop unrolling 6x for inner, 2x for outer and 4x for the last loop
+
 void v1(mat* x, mat* y, mat* z) {
     double t1;
     double t2;
